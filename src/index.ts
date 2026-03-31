@@ -10,6 +10,40 @@ import { renderNotification } from './notification';
 import { createProductConfiguration } from './product';
 import { createVSCodeWebConfig, createWorkbenchOptions, Platform } from './config';
 
+// Block VS Code keyboard shortcuts to prevent access to command palette, terminal, etc.
+window.addEventListener(
+	'keydown',
+	(e: KeyboardEvent) => {
+		const ctrl = e.ctrlKey || e.metaKey;
+		const key = e.key.toLowerCase();
+
+		// Always block function keys used by VS Code
+		if (['f1', 'f5', 'f8', 'f9', 'f10', 'f11'].includes(key)) {
+			e.preventDefault();
+			e.stopPropagation();
+			return;
+		}
+
+		if (!ctrl) return;
+
+		// Block all Ctrl+Shift+letter (VS Code panel/view shortcuts)
+		if (e.shiftKey) {
+			e.preventDefault();
+			e.stopPropagation();
+			return;
+		}
+
+		// Block specific Ctrl+letter VS Code shortcuts
+		// Allow: c (copy), v (paste), x (cut), a (select all), z (undo), y (redo)
+		const allowedKeys = ['c', 'v', 'x', 'a', 'z', 'y'];
+		if (!allowedKeys.includes(key)) {
+			e.preventDefault();
+			e.stopPropagation();
+		}
+	},
+	true, // capture phase — intercepts before VS Code handlers
+);
+
 const resolvePlatformState = (): [Platform, string] => {
 	const hostname = window.location.hostname;
 	const pathParts = window.location.pathname.split('/').filter(Boolean);
@@ -44,6 +78,7 @@ const vscodeCommands = [
 	{ id: 'github1s.commands.vscode.pushBrowserUrl', handler: (url: string) => history.pushState(null, '', url) },
 	{ id: 'github1s.commands.vscode.connectToGitHub', handler: ConnectToGitHub },
 	{ id: 'github1s.commands.vscode.connectToGitLab', handler: ConnectToGitLab },
+	{ id: 'github1s.commands.vscode.openUrl', handler: (url: string) => window.open(url, '_blank') },
 ];
 
 globalThis._VSCODE_WEB = {
@@ -53,6 +88,26 @@ globalThis._VSCODE_WEB = {
 		const loadSpinner = document.querySelector('#load-spinner');
 		loadSpinner && loadSpinner.remove();
 		renderNotification(platform);
+
+		const buildDownloadZipUrl = (): string => {
+			const pathParts = window.location.pathname.split('/').filter(Boolean);
+			if (pathParts.length < 2) return '';
+			const owner = pathParts[0];
+			const repo = pathParts[1];
+			const ref = pathParts[2] === 'tree' && pathParts[3] ? pathParts[3] : 'HEAD';
+			return `https://github.com/${owner}/${repo}/archive/${ref === 'HEAD' ? 'HEAD' : `refs/heads/${ref}`}.zip`;
+		};
+
+		// Create floating download button
+		const downloadBtn = document.createElement('button');
+		downloadBtn.id = 'floating-download-btn';
+		downloadBtn.title = 'Download Repository as ZIP';
+		downloadBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5 20h14v-2H5v2zm7-18v12.17l-3.59-3.58L7 12l5 5 5-5-1.41-1.41L13 14.17V2h-1z"/></svg>`;
+		downloadBtn.addEventListener('click', () => {
+			const url = buildDownloadZipUrl();
+			if (url) window.open(url, '_blank');
+		});
+		document.body.appendChild(downloadBtn);
 	},
 	...createVSCodeWebConfig(platform, repository),
 };

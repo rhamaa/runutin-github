@@ -3,23 +3,11 @@
  * @author netcon
  */
 
-import githubLogoUrl from './assets/github.svg';
-import gitlabLogoUrl from './assets/gitlab.svg';
-import bitbucketLogoUrl from './assets/bitbucket.svg';
-import npmLogoUrl from './assets/npm.svg';
+import downloadIconUrl from './assets/download.svg';
 
 const createFolderWorkspace = (scheme: string) => ({
 	folderUri: { scheme, authority: '', path: '/', query: '', fragment: '' },
 });
-
-const openGitHub1sPage = () => {
-	return window.open('https://github.com/conwnet/github1s', '_blank');
-};
-
-const openOfficialPage = (origin: string) => {
-	const targetPath = window.location.pathname + window.location.search + window.location.hash;
-	return window.open(origin + targetPath, '_blank');
-};
 
 const createWindowIndicator = (label: string) => ({
 	tooltip: label || '',
@@ -32,6 +20,8 @@ const createConfigurationDefaults = (disableSomeAnyCodeFeatures: boolean) => {
 		'workbench.colorTheme': 'Atomize',
 		'workbench.iconTheme': 'material-icon-theme',
 		'telemetry.telemetryLevel': 'off',
+		'window.menuBarVisibility': 'hidden',
+		'window.commandCenter': false,
 		'workbench.startupEditor': 'readme',
 		'workbench.editorAssociations': { '*.md': 'vscode.markdown.preview.editor' },
 		'markdown.preview.doubleClickToSwitchToEditor': false,
@@ -75,6 +65,20 @@ export enum Platform {
 	npm = 'npm',
 }
 
+const buildDownloadZipUrl = (platform: Platform, repository: string): string => {
+	if (!repository) return '';
+	const pathParts = window.location.pathname.split('/').filter(Boolean);
+	const ref = pathParts[2] === 'tree' && pathParts[3] ? pathParts[3] : 'HEAD';
+	const repo = repository.split('/')[1] || repository;
+	if (platform === Platform.GitLab) {
+		return `https://gitlab.com/${repository}/-/archive/${ref}/${repo}-${ref}.zip`;
+	}
+	if (platform === Platform.Bitbucket) {
+		return `https://bitbucket.org/${repository}/get/${ref}.zip`;
+	}
+	return `https://github.com/${repository}/archive/${ref === 'HEAD' ? 'HEAD' : `refs/heads/${ref}`}.zip`;
+};
+
 export const createVSCodeWebConfig = (platform: Platform, repository: string): any => {
 	if (platform === Platform.GitLab) {
 		return {
@@ -83,14 +87,13 @@ export const createVSCodeWebConfig = (platform: Platform, repository: string): a
 			workspaceId: repository ? 'gitlab1s:' + repository : '',
 			workspaceLabel: repository,
 			logo: {
-				title: 'Open on GitLab',
-				icon: gitlabLogoUrl,
-				onClick: () => (repository ? openOfficialPage(GITLAB_ORIGIN) : openGitHub1sPage()),
+				title: 'Download Repository as ZIP',
+				icon: downloadIconUrl,
+				onClick: () => repository && window.open(buildDownloadZipUrl(platform, repository), '_blank'),
 			},
 		};
 	}
 
-	// bitbucket is not available now
 	if (platform === Platform.Bitbucket) {
 		return {
 			hideTextFileLabelDecorations: !!repository,
@@ -98,9 +101,9 @@ export const createVSCodeWebConfig = (platform: Platform, repository: string): a
 			workspaceId: repository ? 'bitbucket1s:' + repository : '',
 			workspaceLabel: repository,
 			logo: {
-				title: 'Open on Bitbucket',
-				icon: bitbucketLogoUrl,
-				onClick: () => (repository ? openOfficialPage('https://bitbucket.org') : openGitHub1sPage()),
+				title: 'Download Repository as ZIP',
+				icon: downloadIconUrl,
+				onClick: () => repository && window.open(buildDownloadZipUrl(platform, repository), '_blank'),
 			},
 		};
 	}
@@ -112,9 +115,11 @@ export const createVSCodeWebConfig = (platform: Platform, repository: string): a
 			workspaceId: repository ? 'npmjs1s:' + repository : '',
 			workspaceLabel: repository,
 			logo: {
-				title: 'Open on npm',
-				icon: npmLogoUrl,
-				onClick: () => (repository ? openOfficialPage('https://npmjs.com') : openGitHub1sPage()),
+				title: 'Download Package as ZIP',
+				icon: downloadIconUrl,
+				onClick: () =>
+					repository &&
+					window.open(`https://registry.npmjs.org/${repository}/-/${repository.split('/').pop()}-latest.tgz`, '_blank'),
 			},
 		};
 	}
@@ -126,9 +131,9 @@ export const createVSCodeWebConfig = (platform: Platform, repository: string): a
 		workspaceId: !isOnlineEditor ? 'github1s:' + (repository || 'trending') : '',
 		workspaceLabel: repository || (isOnlineEditor ? '' : 'GitHub Trending'),
 		logo: {
-			title: 'Open on GitHub',
-			icon: githubLogoUrl,
-			onClick: () => (repository ? openOfficialPage(GITHUB_ORIGIN) : openGitHub1sPage()),
+			title: 'Download Repository as ZIP',
+			icon: downloadIconUrl,
+			onClick: () => repository && !isOnlineEditor && window.open(buildDownloadZipUrl(platform, repository), '_blank'),
 		},
 	};
 };

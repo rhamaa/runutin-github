@@ -10,6 +10,7 @@ import { registerCommitCommands } from './commit';
 import { registerEditorCommands } from './editor';
 import { registerBlameCommands } from './blame';
 import { registerGlobalCommands } from './global';
+import { registerDownloadCommands } from './download';
 
 export const registerGitHub1sCommands = () => {
 	const context = getExtensionContext();
@@ -20,4 +21,5 @@ export const registerGitHub1sCommands = () => {
 	// registerCommitCommands(context); // Disabled: commit history not shown
 	// registerBlameCommands(context); // Disabled: blame not shown
 	registerGlobalCommands(context);
+	registerDownloadCommands(context);
 };

@@ -13,6 +13,9 @@ importers:
       '@github1s/vscode-web':
         specifier: ^0.27.0
         version: 0.27.0
+      adm-zip:
+        specifier: ^0.5.16
+        version: 0.5.16
       chokidar:
         specifier: ^4.0.3
         version: 4.0.3
@@ -714,6 +717,11 @@ packages:
       { integrity: sha512-UVJyE9MttOsBQIDKw1skb9nAwQuR5wuGD3+82K6JgJlm/Y+KI92oNsMNGZCYdDsVtRHSak0pcV5Dno5+4jh9sw== }
     engines: { node: '>=0.4.0' }
     hasBin: true
+
+  adm-zip@0.5.16:
+    resolution:
+      { integrity: sha512-TGw5yVi4saajsSEgz25grObGHEUaDrniwvA2qwSC060KfqGPdglhvPMA2lPIoxs3PQIItj2iag35fONcQqgUaQ== }
+    engines: { node: '>=12.0' }
 
   ajv-formats@2.1.1:
     resolution:
@@ -4216,6 +4224,8 @@ snapshots:
       acorn: 8.16.0
 
   acorn@8.16.0: {}
+
+  adm-zip@0.5.16: {}
 
   ajv-formats@2.1.1(ajv@8.18.0):
     optionalDependencies:

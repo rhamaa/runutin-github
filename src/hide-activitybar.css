@@ -19,6 +19,13 @@
 	display: none !important;
 }
 
+/* Hide Search button from activity bar */
+.monaco-workbench .activitybar .composite-bar .action-item[aria-label*="Search"],
+.monaco-workbench .activitybar .composite-bar .action-item:has(.action-label[aria-label*="Search"]),
+.monaco-workbench .activitybar .composite-bar .action-item:has(.action-label[title*="Search"]) {
+	display: none !important;
+}
+
 /* Fallback using :has() for different VS Code DOM structures */
 .monaco-workbench .activitybar .composite-bar .action-item:has(.action-label[aria-label*="Source Control"]),
 .monaco-workbench .activitybar .composite-bar .action-item:has(.action-label[aria-label*="Run and Debug"]),
@@ -36,4 +43,107 @@
 /* Hide the custom github1s Settings view icon from activity bar */
 .monaco-workbench .activitybar .composite-bar .action-item[aria-label*="Settings"] {
 	display: none !important;
+}
+
+/* ─── Hide Accounts and Manage (Settings gear) at the bottom of the activity bar ─── */
+.monaco-workbench .activitybar .action-item[aria-label*="Accounts"],
+.monaco-workbench .activitybar .action-item[aria-label*="Manage"],
+.monaco-workbench .activitybar .action-item:has(.action-label[aria-label*="Accounts"]),
+.monaco-workbench .activitybar .action-item:has(.action-label[aria-label*="Manage"]),
+.monaco-workbench .activitybar .action-item:has(.action-label[title*="Accounts"]),
+.monaco-workbench .activitybar .action-item:has(.action-label[title*="Manage"]) {
+	display: none !important;
+}
+
+/* ─── Hide entire top header / titlebar ─── */
+.monaco-workbench .part.titlebar {
+	display: none !important;
+}
+
+/* ─── Hide Outline and Timeline panels in the Explorer sidebar ─── */
+.monaco-workbench .part.sidebar .split-view-view:has([aria-label="Outline Section"]),
+.monaco-workbench .part.sidebar .split-view-view:has([aria-label="Timeline Section"]),
+.monaco-workbench .part.sidebar .split-view-view:has([aria-label*="OUTLINE"]),
+.monaco-workbench .part.sidebar .split-view-view:has([aria-label*="TIMELINE"]) {
+	display: none !important;
+}
+/* Fallback: hide the pane headers and their collapsed/expanded bodies */
+.monaco-workbench .part.sidebar .pane-header[aria-label="Outline Section"],
+.monaco-workbench .part.sidebar .pane-header[aria-label="Timeline Section"] {
+	display: none !important;
+}
+
+/* ─── Hide Replace section in Search view ─── */
+.monaco-workbench .search-view .search-widget .replace-container,
+.monaco-workbench .search-view .search-widget .toggle-replace-button,
+.monaco-workbench .search-view .replace-all-on-type-button,
+.monaco-workbench .search-view .replace-all-button,
+.monaco-workbench .search-view .replace-action-bar {
+	display: none !important;
+}
+
+/* ─── Hide hamburger / application menu (≡) that VS Code injects into activity bar ─── */
+.monaco-workbench .part.activitybar .home-bar,
+.monaco-workbench .part.activitybar .home-bar-action-bar,
+.monaco-workbench .part.activitybar .global-activity-action-bar,
+.monaco-workbench .menubar,
+.monaco-workbench .menubar-menu-button,
+.monaco-workbench .activitybar .action-item:has(.codicon-menu),
+.monaco-workbench .activitybar .action-item[aria-label*="Application Menu"] {
+	display: none !important;
+}
+
+/* ─── Fullscreen fix: override VS Code's inline top offset left by hidden titlebar ─── */
+.monaco-workbench .part.activitybar.left,
+.monaco-workbench .part.auxiliarybar.left,
+.monaco-workbench .part.sidebar.left,
+.monaco-workbench .part.editor.center,
+.monaco-workbench .part.panel.bottom {
+	top: 0 !important;
+}
+
+/* ─── Hide Explorer panel toolbar buttons (refresh, collapse, etc.) ─── */
+.monaco-workbench .part.sidebar .pane-header .actions,
+.monaco-workbench .part.sidebar .pane-header .monaco-toolbar,
+.monaco-workbench .part.sidebar .pane-header .action-item,
+.monaco-workbench .part.sidebar .pane-header .title .monaco-action-bar,
+.monaco-workbench .part.sidebar .pane-header .title .actions-container,
+.monaco-workbench .part.sidebar .viewpane-header .actions,
+.monaco-workbench .part.sidebar .viewpane-header .monaco-toolbar,
+.monaco-workbench .part.sidebar .viewpane-header .action-item {
+	display: none !important;
+}
+
+/* ─── Floating Download Button ─── */
+#floating-download-btn {
+	position: fixed;
+	bottom: 24px;
+	right: 24px;
+	width: 56px;
+	height: 56px;
+	background: #238636;
+	border-radius: 50%;
+	border: none;
+	cursor: pointer;
+	z-index: 999999;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+	transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+#floating-download-btn:hover {
+	transform: scale(1.1);
+	box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+}
+
+#floating-download-btn svg {
+	width: 28px;
+	height: 28px;
+	fill: white;
+}
+
+#floating-download-btn:active {
+	transform: scale(0.95);
 }
