@@ -3,6 +3,7 @@
  * @author netcon
  */
 
+import './hide-activitybar.css';
 import { ConnectToGitHub } from './github-auth';
 import { ConnectToGitLab } from './gitlab-auth';
 import { renderNotification } from './notification';

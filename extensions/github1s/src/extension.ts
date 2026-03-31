@@ -6,12 +6,12 @@
 import router from '@/router';
 import * as vscode from 'vscode';
 import { PageType } from './adapters/types';
-import { registerCustomViews } from '@/views';
+// import { registerCustomViews } from '@/views'; // Disabled: views not shown in simplified mode
 import { decorateStatusBar } from '@/statusbar';
 import { registerEventListeners } from '@/listeners';
 import { registerVSCodeProviders } from '@/providers';
 import { registerGitHub1sCommands } from '@/commands';
-import { updateSourceControlChanges } from '@/changes';
+// import { updateSourceControlChanges } from '@/changes'; // Disabled: SCM not shown
 import { adapterManager, registerAdapters } from '@/adapters';
 import { addRecentRepositories, setExtensionContext } from '@/helpers/context';
 
@@ -34,13 +34,13 @@ export async function activate(context: vscode.ExtensionContext) {
 	// Ensure the router has been initialized
 	await router.initialize(browserUrlManager);
 
-	// do follow-up works in parallel
+	// do follow-up works in parallel - simplified for read-only repo preview
 	await Promise.all([
 		registerVSCodeProviders(),
 		registerEventListeners(),
 		registerGitHub1sCommands(),
-		registerCustomViews(),
-		updateSourceControlChanges(),
+		// registerCustomViews(), // Disabled: custom views not shown
+		// updateSourceControlChanges(), // Disabled: SCM not shown
 		decorateStatusBar(),
 	]);
 
@@ -69,14 +69,8 @@ const initialVSCodeState = async () => {
 			vscode.Uri.parse('').with({ scheme, path: `/${routerState.filePath}` }),
 			documentShowOptions,
 		);
-	} else if (routerState.pageType === PageType.CodeReviewList) {
-		vscode.commands.executeCommand('github1s.views.codeReviewList.focus');
-	} else if (routerState.pageType === PageType.CommitList) {
-		vscode.commands.executeCommand('github1s.views.commitList.focus');
-	} else if ([PageType.CodeReview, PageType.Commit].includes(routerState.pageType)) {
-		vscode.commands.executeCommand('workbench.scm.focus');
-	} else if (routerState.pageType === PageType.Search) {
-		vscode.commands.executeCommand('workbench.action.findInFiles', routerState);
 	}
+	// Note: CodeReviewList, CommitList, and SCM views are disabled in simplified mode
+	// These page types will just show the file explorer instead
 	routerState.repo && addRecentRepositories(routerState.repo);
 };

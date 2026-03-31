@@ -14,7 +14,7 @@
     "eslint": "eslint --fix",
     "test:ci": "start-test watch:dev-server 8080 test",
     "test": "cd tests && npm install && npx playwright install && npm run test",
-    "postinstall": "husky install && node scripts/postinstall.js"
+    "postinstall": "husky install && node scripts/postinstall.js && node scripts/download-extensions.js"
   },
   "lint-staged": {
     "*.{js,ts}": [
@@ -30,6 +30,7 @@
   "license": "ISC",
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20250109.0",
+    "adm-zip": "^0.5.16",
     "@github1s/vscode-web": "^0.27.0",
     "chokidar": "^4.0.3",
     "clean-css": "^5.3.3",

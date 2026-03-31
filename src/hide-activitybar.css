@@ -1,0 +1,39 @@
+/*
+ * Hide Source Control (branch), Run and Debug, and Extensions
+ * from the VS Code activity bar in simplified read-only mode.
+ * Targets the composite bar action items by their aria-label.
+ */
+
+/* Hide Source Control / SCM (branch icon) */
+.monaco-workbench .activitybar .composite-bar .action-item[aria-label*="Source Control"] {
+	display: none !important;
+}
+
+/* Hide Run and Debug */
+.monaco-workbench .activitybar .composite-bar .action-item[aria-label*="Run and Debug"] {
+	display: none !important;
+}
+
+/* Hide Extensions */
+.monaco-workbench .activitybar .composite-bar .action-item[aria-label*="Extensions"] {
+	display: none !important;
+}
+
+/* Fallback using :has() for different VS Code DOM structures */
+.monaco-workbench .activitybar .composite-bar .action-item:has(.action-label[aria-label*="Source Control"]),
+.monaco-workbench .activitybar .composite-bar .action-item:has(.action-label[aria-label*="Run and Debug"]),
+.monaco-workbench .activitybar .composite-bar .action-item:has(.action-label[aria-label*="Extensions"]) {
+	display: none !important;
+}
+
+/* Also hide via title attribute for extra coverage */
+.monaco-workbench .activitybar .composite-bar .action-item:has(.action-label[title*="Source Control"]),
+.monaco-workbench .activitybar .composite-bar .action-item:has(.action-label[title*="Run and Debug"]),
+.monaco-workbench .activitybar .composite-bar .action-item:has(.action-label[title*="Extensions"]) {
+	display: none !important;
+}
+
+/* Hide the custom github1s Settings view icon from activity bar */
+.monaco-workbench .activitybar .composite-bar .action-item[aria-label*="Settings"] {
+	display: none !important;
+}

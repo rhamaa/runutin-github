@@ -29,11 +29,27 @@ const createWindowIndicator = (label: string) => ({
 
 const createConfigurationDefaults = (disableSomeAnyCodeFeatures: boolean) => {
 	const configurationDefaults = {
-		'workbench.colorTheme': 'Default Dark+',
+		'workbench.colorTheme': 'Atomize',
+		'workbench.iconTheme': 'material-icon-theme',
 		'telemetry.telemetryLevel': 'off',
 		'workbench.startupEditor': 'readme',
 		'workbench.editorAssociations': { '*.md': 'vscode.markdown.preview.editor' },
 		'markdown.preview.doubleClickToSwitchToEditor': false,
+		// Hide SCM (Source Control) view
+		'scm.showActionButton': false,
+		'scm.alwaysShowRepositories': false,
+		// Disable Settings UI access
+		'workbench.settings.enableNaturalLanguageSearch': false,
+		// Hide status bar items
+		'workbench.statusBar.visible': false,
+		// Disable extension recommendations
+		'extensions.ignoreRecommendations': true,
+		'extensions.showRecommendationsOnlyOnDemand': true,
+		// Disable debug features
+		'debug.enableStatusBarColor': false,
+		// Make it read-only
+		'files.readOnlyFromPermissions': true,
+		'workbench.editor.enablePreview': true,
 	} as Record<string, any>;
 
 	// disable some anycode features when we can use sourcegraph instead
