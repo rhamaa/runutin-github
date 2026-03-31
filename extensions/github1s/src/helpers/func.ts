@@ -6,7 +6,7 @@
 import * as jsonStableStringify from 'json-stable-stringify';
 import pFinally from 'p-finally';
 
-const defaultComputeCacheKey = (...args) => jsonStableStringify([...args]);
+const defaultComputeCacheKey = (...args: any[]): string => jsonStableStringify([...args]) || '';
 
 // reuse previous promise when a request call
 // and previous request not completed
